@@ -13,6 +13,10 @@ type Page struct {
 	Body  []byte
 }
 
+//Global variable to store all the templates at program initalization
+//TODO: need to add edit.html to templates, but that's a breaking change i'll deal with later.
+var templates = template.Must(template.ParseFiles("tmpl/view.html"))
+
 // Load Method
 func loadPage(title string) (*Page, error) {
 	filename := title + ".txt"
@@ -73,12 +77,11 @@ func saveHandler(w http.ResponseWriter, r *http.Request) {
 
 // Render Template
 func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
-	t, err := template.ParseFiles(tmpl + ".html")
+	err := templates.ExecuteTemplate(w, tmpl+".html", p)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	err = t.Execute(w, p)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
