@@ -16,8 +16,7 @@ type Page struct {
 }
 
 //Global variable to store all the templates at program initalization
-//TODO: need to add edit.html to templates, but that's a breaking change i'll deal with later.
-var templates = template.Must(template.ParseFiles("tmpl/view.html"))
+var templates = template.Must(template.ParseFiles("tmpl/view.html", "tmpl/edit.html"))
 
 //Global variable to so string validation
 var validPath = regexp.MustCompile("^/(edit|save|view)/([a-zA-Z0-9]+)$")
@@ -73,7 +72,7 @@ func editHandler(w http.ResponseWriter, r *http.Request, title string) {
 	if err != nil {
 		p = &Page{Title: title}
 	}
-	t, _ := template.ParseFiles("edit.html")
+	t, _ := template.ParseFiles("tmpl/edit.html")
 	t.Execute(w, p)
 }
 
